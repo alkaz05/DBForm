@@ -7,12 +7,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyEvent;
+import javafx.util.Callback;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class HelloController {
@@ -50,7 +50,7 @@ public class HelloController {
     ObservableList<Liquer> alcohol = FXCollections.observableArrayList();
 
     public void initialize() {
-        int id = 2;
+        table.setItems(alcohol);
         TableColumn<Liquer, String> col1 = new TableColumn<>("label");
         col1.setCellValueFactory(new PropertyValueFactory<>("label"));
         table.getColumns().add(col1);
@@ -82,6 +82,46 @@ public class HelloController {
         col10.setCellValueFactory(new PropertyValueFactory<>("id"));
         table.getColumns().add(col10);
 
+        //дорисовать столбец с кнопкой
+        TableColumn buttonCol = new TableColumn("Button");
+        buttonCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+        Callback<TableColumn<Liquer, Integer>, TableCell<Liquer, Integer>> cellFactory =
+                new Callback<>() {
+                    @Override
+                    public TableCell call(final TableColumn<Liquer, Integer> param) {
+                        final TableCell<Liquer, Integer> cell = new TableCell<>() {
+
+                            final Button btn = new Button("del");
+
+                            @Override
+                            public void updateItem(Integer item, boolean empty) {
+                                super.updateItem(item, empty);
+                                if (empty) {
+                                    setGraphic(null);
+                                    setText(null);
+                                } else {
+                                    setGraphic(btn);
+                                    btn.setOnAction(event -> {
+                                       // System.out.println("надо удалять что-то");
+                                       // System.out.println(item);
+                                        try {
+                                            LiquerProcess.delLiq(item);
+                                            //КАК узнать ссылку на данный Liquer ??
+                                        } catch (SQLException e) {
+                                            System.out.println("опять ошибка удаления");
+                                        }
+                                    });
+                                    setText(null);
+                                }
+                            }
+                        };
+                        return cell;
+                    }
+                };
+
+        buttonCol.setCellFactory(cellFactory);
+        table.getColumns().add(buttonCol);
+
     }
     @FXML
     void saveToDB(ActionEvent event) {
@@ -101,7 +141,7 @@ public class HelloController {
             LiquerProcess.saveLiq(t);
 
         } catch (Exception e) {
-            System.out.println("ошибка записи " + e.getMessage());
+            System.out.println("ошибка записи " + e.getMessage()+" "+e.getStackTrace());
         }
     }
 
@@ -111,8 +151,25 @@ public class HelloController {
             List<Liquer> lst = LiquerProcess.readLiq();
             alcohol.clear();
             alcohol.addAll(lst);
+
         } catch (Exception e) {
             System.out.println("ошибка чтения " + e.getMessage());
+        }
+    }
+
+    @FXML
+    void onKeyPressed(KeyEvent event){
+        if(event.getCode().toString().equals("DELETE")) {
+            System.out.println("надо удалять");
+            int i = table.getSelectionModel().getSelectedItem().getId();
+            System.out.println("удалять объект с номером "+i);
+            try{
+                LiquerProcess.delLiq(i);
+            }catch (SQLException ex)
+            {
+                System.out.println("ошибка при удалении "+ex);
+            }
+            alcohol.remove(table.getSelectionModel().getSelectedItem());
         }
     }
 }

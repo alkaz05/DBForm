@@ -15,20 +15,26 @@ public class LiquerProcess {
     }
         static void saveLiq(Liquer otr) throws SQLException {
             Connection conn = getConnection();
-            int id = 2;
-            String a = otr.getLabel();
-            float b = otr.getVolume();
-            String c = String.valueOf(otr.getCategory());
-            String d = otr.getSubcategory();
-            String e = otr.getCountry();
-            float f = otr.getStrength();
-            float g = otr.getSugar();
-            int h = otr.getYear();
-            int j = otr.getAge();
 
-            String query = "insert into \"liquer\" (id, label, volume, category, subcategory, country, strength, sugar, year, age) values ('"+id+"', '"+a+"', '"+b+"', '"+c+"', '"+d+"','"+e+"','"+f+"','"+g+"','"+h+"', '"+j+"');";
-            Statement st = conn.createStatement();
-            st.execute(query);
+
+
+            String query = "insert into \"liquer\" ( label, " +
+                                                   "volume, category, subcategory, country," +
+                                                   " strength, sugar, year, age)" +
+                           " values ( ?, ?,?,?,?, ?,?,?,?);";
+           //Statement st = conn.createStatement();
+           // st.execute(query);
+            PreparedStatement pst = conn.prepareStatement(query);
+            pst.setString(1, otr.getLabel() );
+            pst.setFloat( 2, otr.getVolume());
+            pst.setString(3, otr.getCategory().name());
+            pst.setString(4, otr.getSubcategory() );
+            pst.setString(5, otr.getCountry());
+            pst.setFloat( 6, otr.getStrength());
+            pst.setFloat( 7, otr.getSugar());
+            pst.setInt(   8, otr.getYear());
+            pst.setInt(   9, otr.getAge());
+            pst.executeUpdate();
         }
 
         static ArrayList<Liquer> readLiq() throws SQLException {
@@ -36,6 +42,7 @@ public class LiquerProcess {
             Connection conn = getConnection();
             Statement st = conn.createStatement();
             String query ="select * from \"liquer\" l ;";
+            System.out.println(query);
             ResultSet rs = st.executeQuery(query);
             while(rs.next()){
                 String a = rs.getString("label");
@@ -54,6 +61,15 @@ public class LiquerProcess {
             }
             return trrrr;
         }
+
+    static void delLiq(int id) throws SQLException {
+        Connection conn = getConnection();
+        String query = "DELETE FROM liquer WHERE id = ?;";
+
+        PreparedStatement pst = conn.prepareStatement(query);
+        pst.setInt(1, id );
+        pst.executeUpdate();
+    }
     }
 
 
