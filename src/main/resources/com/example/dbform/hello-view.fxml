@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="545.0" prefWidth="826.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.dbform.HelloController">
+    <children>
+<TextField fx:id="label" layoutX="27.0" layoutY="22.0" prefHeight="26.0" prefWidth="157.0" text="Марка" />
+<TextField fx:id="volume" layoutX="205.0" layoutY="22.0" prefHeight="26.0" prefWidth="130.0" text="Объем" />
+<TextField fx:id="category" layoutX="364.0" layoutY="22.0" prefHeight="26.0" prefWidth="149.0" text="Категория" />
+        <TextField fx:id="subcategory" layoutX="27.0" layoutY="65.0" prefHeight="26.0" prefWidth="157.0" text="Подкатегория" />
+        <TextField fx:id="country" layoutX="205.0" layoutY="67.0" prefHeight="26.0" prefWidth="130.0" text="Страна" />
+        <TextField fx:id="strength" layoutX="364.0" layoutY="67.0" prefHeight="26.0" prefWidth="149.0" text="Крепость" />
+        <TextField fx:id="sugar" layoutX="27.0" layoutY="115.0" prefHeight="26.0" prefWidth="157.0" text="Сахар" />
+        <TextField fx:id="year" layoutX="205.0" layoutY="122.0" prefHeight="26.0" prefWidth="130.0" text="Год" />
+        <TextField fx:id="age" layoutX="368.0" layoutY="122.0" prefHeight="26.0" prefWidth="149.0" text="Выдержка" />
+        <TextField fx:id="id" layoutX="531.0" layoutY="22.0" prefHeight="26.0" prefWidth="83.0" text="id" />
+<Button layoutX="706.0" layoutY="22.0" mnemonicParsing="false" onAction="#saveToDB" text="Добавить в БД" />
+<TableView fx:id="table" layoutX="14.0" layoutY="196.0" prefHeight="335.0" prefWidth="708.0">
+<columns>
+</columns>
+</TableView>
+<Button layoutX="698.0" layoutY="67.0" mnemonicParsing="false" onAction="#reloadFromBD" text="перечитать из БД" />
+        </children>
+        </AnchorPane>
